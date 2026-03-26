@@ -1,0 +1,5 @@
+# Intentionally vulnerable pins for DevSecOps POC demonstrations only.
+# Do not use these versions in production.
+requests==2.19.1
+flask==0.12
+django==2.2

@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "osv-local": {
+      "type": "local",
+      "command": "python",
+      "args": ["mcp/osv_mcp_server.py"],
+      "tools": ["osv_lookup_package", "osv_lookup_requirements"]
+    }
+  }
+}
