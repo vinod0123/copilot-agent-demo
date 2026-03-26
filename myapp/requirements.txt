@@ -1,4 +1,7 @@
 # Pinned dependencies currently in use by the application.
-requests==2.19.1
-flask==0.12
-django==2.2
+# requests 2.19.1 had GHSA-j8r2-6x86-q33q (credential leak via HTTP redirect) – patched in 2.20.0.
+requests==2.32.3
+# flask 0.12 had GHSA-562c-5r94-xh97 (DoS) and session-cookie disclosure – patched in 1.0 / 2.2.5 / 2.3.2.
+flask==3.0.3
+# django 2.2 had multiple HIGH/CRITICAL issues (SQL injection, DoS) – upgrade to current LTS.
+django==4.2.26
