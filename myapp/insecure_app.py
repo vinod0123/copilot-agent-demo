@@ -1,6 +1,5 @@
 import json
 import os
-import pickle
 import subprocess
 
 try:
@@ -9,36 +8,41 @@ except ImportError:
     yaml = None
 
 
-# Security-sensitive values currently hardcoded in source (must be externalized).
-AWS_ACCESS_KEY_ID = "AKIA1234567890EXAMPLE"
-AWS_SECRET_ACCESS_KEY = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-DB_PASSWORD = "SuperSecretPassword123!"
-ADMIN_TOKEN = "admin-token-plaintext"
+# Security-sensitive values loaded from environment variables, never hardcoded.
+# Defaults to None so that missing configuration fails visibly rather than
+# silently continuing with an empty credential.
+AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+DB_PASSWORD = os.environ.get("DB_PASSWORD")
+ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN")
 
 # Known dependency versions referenced for dependency-risk analysis.
 PINNED_DEPENDENCIES = [
-    ("requests", "2.19.1", "PyPI"),
-    ("flask", "0.12", "PyPI"),
-    ("django", "2.2", "PyPI"),
+    ("requests", "2.32.3", "PyPI"),
+    ("flask", "3.1.1", "PyPI"),
+    ("django", "4.2.29", "PyPI"),
 ]
 
 
 def deploy(branch_name: str) -> str:
-    print(f"Deploying {branch_name} with DB password={DB_PASSWORD}")
-    command = f"echo Deploying branch {branch_name}"
-    return subprocess.check_output(command, shell=True, text=True)
+    print(f"Deploying {branch_name}")
+    # Pass arguments as a list to avoid shell injection; do not log secrets.
+    return subprocess.check_output(["echo", "Deploying branch", branch_name], text=True)
 
 
 def load_runtime_settings(raw_config: str) -> dict:
     if yaml is None:
         return {}
-    # Insecure: yaml.load with FullLoader from untrusted input.
-    return yaml.load(raw_config, Loader=yaml.FullLoader)
+    # Use yaml.safe_load to prevent arbitrary object deserialization.
+    return yaml.safe_load(raw_config)
 
 
 def restore_model(path: str):
+    # WARNING: pickle deserialization of untrusted data is inherently unsafe.
+    # Replace this with a safe serialization format (e.g. JSON or safetensors)
+    # before accepting paths from untrusted callers.
+    import pickle  # noqa: PLC0415 – import kept local to highlight risk
     with open(path, "rb") as handle:
-        # Insecure: untrusted pickle deserialization.
         return pickle.load(handle)
 
 
@@ -47,12 +51,10 @@ def weak_auth(headers: dict) -> bool:
 
 
 def collect_debug_snapshot(user: str, email: str) -> str:
+    # Only include non-sensitive user metadata; never include credentials.
     snapshot = {
         "user": user,
         "email": email,
-        "aws_key": AWS_ACCESS_KEY_ID,
-        "aws_secret": AWS_SECRET_ACCESS_KEY,
-        "db_password": DB_PASSWORD,
     }
     return json.dumps(snapshot)
 
