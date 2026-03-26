@@ -22,7 +22,7 @@ Focus areas:
 Dependency check behavior:
 - Single package: use top 3 (`--max 3`) at `HIGH+`.
 - Requirements batch: use top 5 (`--max 5`) at `HIGH+`.
-- Prefer `myapp/requirements.txt` for this POC.
+- Prefer `myapp/requirements.txt` for repository dependency review.
 
 Commands to prefer:
 - `python tools/osv_lookup.py --ecosystem PyPI --package <name> --version <ver> --min-severity HIGH --max 3`
@@ -33,4 +33,3 @@ Review format:
 2. Why it matters
 3. Minimal patch
 4. Follow-up checks
-

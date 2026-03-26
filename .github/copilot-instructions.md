@@ -1,6 +1,6 @@
 ## Repository Instructions for Copilot
 
-You are assisting a DevSecOps proof of concept.
+You are assisting a production-oriented DevSecOps repository.
 
 Priorities:
 - Review security risks before style issues.
@@ -19,4 +19,3 @@ Output style:
 2. Why it matters
 3. Minimal fix
 4. Residual risk
-

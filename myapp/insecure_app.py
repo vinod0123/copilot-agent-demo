@@ -9,13 +9,13 @@ except ImportError:
     yaml = None
 
 
-# Intentionally insecure values for DevSecOps demo purposes.
+# Security-sensitive values currently hardcoded in source (must be externalized).
 AWS_ACCESS_KEY_ID = "AKIA1234567890EXAMPLE"
 AWS_SECRET_ACCESS_KEY = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
 DB_PASSWORD = "SuperSecretPassword123!"
-ADMIN_TOKEN = "admin-demo-token-plaintext"
+ADMIN_TOKEN = "admin-token-plaintext"
 
-# Intentionally outdated dependencies for dependency-risk discussion.
+# Known dependency versions referenced for dependency-risk analysis.
 PINNED_DEPENDENCIES = [
     ("requests", "2.19.1", "PyPI"),
     ("flask", "0.12", "PyPI"),
